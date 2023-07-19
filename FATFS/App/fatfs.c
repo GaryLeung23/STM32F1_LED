@@ -30,7 +30,7 @@ FRESULT f_res;                  /* 文件操作结果 */
 UINT fnum;                      /* 文件成功读写数量 */
 BYTE ReadBuffer[1024] = {0};    /* 读缓冲区 */
 const BYTE WriteBuffer[] =  "This is STM32 working with FatFs with the STM32CUBEMX tool.\r\n";          /* 写缓冲区 */
-const TCHAR FileName[] = "0:/my_folder/FatFs_STM32.txt";              /* 文件�????????? */
+const TCHAR FileName[] = "0:/my_folder/FatFs_STM32.txt";
 const TCHAR DirName[] = "0:/my_folder";
 /* USER CODE END Variables */
 
@@ -63,7 +63,7 @@ DWORD get_fattime(void)
     //printf("%d-%d-%d %d:%d:%d\r\n", sDate.Year, sDate.Month, sDate.Date, sTime.Hours, sTime.Minutes, sTime.Seconds);
     /* 将FATFS时间结构体格式化 */
     //
-    DWORD fatfs_time = ((DWORD) (sDate.Year +20) << 25) // Year = 1980 + sDate.Year，这里的20是因为RTC驱动中的年份是从2000年开始计算，而这里需�?1980�?始计�?
+    DWORD fatfs_time = ((DWORD) (sDate.Year +20) << 25) // Year = 1980 + sDate.Year，这里的20是因为RTC驱动中的年份是从2000年开始计算，而这里需�?1980�?始计�?
                        | ((DWORD) sDate.Month << 21)    // Month = sDate.Month
                        | ((DWORD) sDate.Date << 16)     // Day = sDate.Date
                        | ((DWORD) sTime.Hours << 11)    // Hour = sTime.Hours
@@ -77,14 +77,14 @@ DWORD get_fattime(void)
 void MX_FATFS_TEST(void){
     printf("\r\n****** FatFs Example ******\r\n\r\n");
 
-    //在外�????????? SD 卡挂载文件系统，文件系统挂载时会�????????? SD 卡初始化
+    //在外�????????? SD 卡挂载文件系统，文件系统挂载时会�????????? SD 卡初始化
     f_res = f_mount(&SDFatFS, (const TCHAR*)SDPath, 1);
     printf("\r\n****** Register the file system object to the FatFs module ******\r\n");
     /* 如果没有文件系统就格式化创建创建文件系统 */
     if(f_res == FR_NO_FILESYSTEM)
     {
         printf("The SD card does not yet have a file system and is about to be formatted...\r\n");
-        /* 格式�????????? */
+        /* 格式�????????? */
         f_res = f_mkfs((const TCHAR*)SDPath, 0, 0);
         if(f_res == FR_OK)
         {
@@ -112,7 +112,7 @@ void MX_FATFS_TEST(void){
 
     printf("\r\n****** Create new dir ******\r\n");
 
-    /* 创建文件�?? */
+    /* 创建文件�?? */
     f_res = f_mkdir(DirName);
 
     if (f_res != FR_OK && f_res != FR_EXIST) {
@@ -141,7 +141,7 @@ void MX_FATFS_TEST(void){
             printf(" write file error : %d\r\n", f_res);
             return;
         }
-        /* 不再读写，关闭文�????????? */
+        /* 不再读写，关闭文�????????? */
         f_close(&SDFile);
     }
     else
@@ -173,23 +173,23 @@ void MX_FATFS_TEST(void){
         printf(" open file error : %d\r\n", f_res);
         return;
     }
-    /* 不再读写，关闭文�????????? */
+    /* 不再读写，关闭文�????????? */
     f_close(&SDFile);
 
-    DIR dir;    /* 文件夹句�?? */
+    DIR dir;    /* 文件夹句�?? */
     FILINFO fno;
     printf("\r\n****** Read Dir info ******\r\n");
-    /* 打开文件�?? */
+    /* 打开文件�?? */
     f_res = f_opendir(&dir, DirName);
 
     if (f_res != FR_OK) {
-        /* 文件夹打�??失败，进行错误处�?? */
+        /* 文件夹打�??失败，进行错误处�?? */
         printf("\n****** Open directory failed: %d\r\n", f_res);
     }
 
-/* 文件夹打�??成功，可以读取文件夹中的文件 */
+/* 文件夹打�??成功，可以读取文件夹中的文件 */
     while (1) {
-        /* 读取文件夹中的文件信�?? */
+        /* 读取文件夹中的文件信�?? */
         f_res = f_readdir(&dir, &fno);
 
         if (f_res != FR_OK || fno.fname[0] == 0) {
@@ -202,12 +202,12 @@ void MX_FATFS_TEST(void){
             /* 如果是子目录 */
             printf("DIR: %s\r\n", fno.fname);
         } else {
-            /* 如果是文�?? */
+            /* 如果是文�?? */
             printf("FILE: %s\r\n", fno.fname);
         }
     }
 
-/* 关闭文件�?? */
+/* 关闭文件�?? */
     f_closedir(&dir);
 
 
@@ -215,11 +215,10 @@ void MX_FATFS_TEST(void){
 
 
 
-    /* 不再使用文件系统，取消挂载文件系�????????? */
+    /* 不再使用文件系统，取消挂载文件系�????????? */
     f_mount(NULL,(const TCHAR*)SDPath , 1);
 
 
 }
-
 
 /* USER CODE END Application */

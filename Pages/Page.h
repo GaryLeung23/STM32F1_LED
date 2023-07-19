@@ -24,7 +24,13 @@
 #define __PAGE_H
 
 #include "../../lvgl/lvgl.h"
-#include "../PageManager/PageManager.h"
+#include "PageManager.h"
+#include "DataProc.h"
+#include "ResourcePool.h"
+#include "Utils/lv_anim_label/lv_anim_label.h"
+#include "Utils/lv_ext/lv_obj_ext_func.h"
+#include "Utils/lv_ext/lv_anim_timeline_wrapper.h"
+#include "Utils/lv_poly_line/lv_poly_line.h"
 
 
 #endif

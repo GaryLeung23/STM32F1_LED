@@ -23,9 +23,13 @@
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "../../LVGL/src/hal/lv_hal_tick.h"
-#include "../../KEY/Inc/key.h"
-#include "../../BEEP/Tone.h"
-#include "../../BEEP/Audio.h"
+#include "Tone.h"
+#include "Audio.h"
+#include "gps.h"
+#include "mag.h"
+#include "imu.h"
+#include "power.h"
+#include "sdcard.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -192,12 +196,21 @@ void SysTick_Handler(void)
         HAL_GPIO_TogglePin(LED1_GPIO_Port, LED1_Pin);
         HAL_GPIO_TogglePin(LED0_GPIO_Port, LED0_Pin);
 
-        //printf("test\r\n");
-
+        MAG_Update();
+        IMU_Update();
     }
     if (systick_cnt % 10 == 0) {
-        Key_Update();
         Audio_Update();//每个音符中间有10ms停顿，取决于调用间隔
+        Power_Update();
+    }
+    if(systick_cnt % 100 == 0) {
+        Power_EventMonitor();
+    }
+    if(systick_cnt % 200 == 0) {
+        GPS_Update();
+    }
+    if(systick_cnt % 500 == 0) {
+        SD_Update();
     }
 
     systick_cnt++;

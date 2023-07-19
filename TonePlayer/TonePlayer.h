@@ -62,7 +62,7 @@ public:
 private:
     uint16_t Length;//一段音频的中的音符个数
     uint16_t CurrentPos;//一段音频的中的音符位置
-    uint32_t NextTime;//一个音符下次播放的时间点
+    uint32_t NextTime;//下一个音符播放的时间点
     uint16_t Speed;
     const MusicNode_t* CurrentMusic;
     CallbackFunction_t CallbackFunction;

@@ -16,6 +16,7 @@
 
 #define IS62WV51216_SIZE            (0x100000UL)
 #define IS62WV51216_BASE_ADDR       ((uint32_t)(0x68000000UL))
+
 /*
  *  函数名：void SRAM_WriteBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
  *  输入参数：pdata->要写入数据的首地址
@@ -25,7 +26,7 @@
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始写入sz个字节
 */
-extern void SRAM_WriteBufferBytes(uint8_t* pBuffer, uint32_t uwWriteAddress, uint16_t uwBufferSize);
+extern void SRAM_WriteBufferBytes(uint8_t *pBuffer, uint32_t uwWriteAddress, uint16_t uwBufferSize);
 
 /*
  *  函数名：void SRAM_ReadBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
@@ -36,7 +37,7 @@ extern void SRAM_WriteBufferBytes(uint8_t* pBuffer, uint32_t uwWriteAddress, uin
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始读出sz个字节
 */
-extern void SRAM_ReadBufferBytes(uint8_t* pBuffer, uint32_t uwReadAddress, uint16_t uwBufferSize);
+extern void SRAM_ReadBufferBytes(uint8_t *pBuffer, uint32_t uwReadAddress, uint16_t uwBufferSize);
 
 /*
  *  函数名：void SRAM_WriteBufferWord(uint16_t *pdata, uint32_t addr, uint16_t sz)
@@ -47,7 +48,7 @@ extern void SRAM_ReadBufferBytes(uint8_t* pBuffer, uint32_t uwReadAddress, uint1
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始写入sz个半字
 */
-extern void SRAM_WriteBufferHalfWord(uint16_t* pBuffer, uint32_t uwWriteAddress, uint16_t uwBufferSize);
+extern void SRAM_WriteBufferHalfWord(uint16_t *pBuffer, uint32_t uwWriteAddress, uint16_t uwBufferSize);
 
 /*
  *  函数名：void SRAM_ReadBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz)
@@ -58,7 +59,7 @@ extern void SRAM_WriteBufferHalfWord(uint16_t* pBuffer, uint32_t uwWriteAddress,
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始读出sz个半字
 */
-extern void SRAM_ReadBufferHalfWord(uint16_t* pBuffer, uint32_t uwReadAddress, uint16_t uwBufferSize);
+extern void SRAM_ReadBufferHalfWord(uint16_t *pBuffer, uint32_t uwReadAddress, uint16_t uwBufferSize);
 
 /*
  *  函数名：void SRAM_WriteBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz)
@@ -69,7 +70,7 @@ extern void SRAM_ReadBufferHalfWord(uint16_t* pBuffer, uint32_t uwReadAddress, u
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始写入sz个字
 */
-extern void SRAM_WriteBufferWord(uint32_t* pBuffer, uint32_t uwWriteAddress, uint32_t uwBufferSize);
+extern void SRAM_WriteBufferWord(uint32_t *pBuffer, uint32_t uwWriteAddress, uint32_t uwBufferSize);
 
 /*
  *  函数名：void SRAM_ReadBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz)
@@ -80,11 +81,13 @@ extern void SRAM_WriteBufferWord(uint32_t* pBuffer, uint32_t uwWriteAddress, uin
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始读出sz个字
 */
-extern void SRAM_ReadBufferWord(uint32_t* pBuffer, uint32_t uwReadAddress, uint32_t uwBufferSize);
+extern void SRAM_ReadBufferWord(uint32_t *pBuffer, uint32_t uwReadAddress, uint32_t uwBufferSize);
 
 
-extern uint8_t  ExtSRAM_test(void);
+extern uint8_t ExtSRAM_test(void);
+
 extern void CopyFlashDataToExtSRAM(void);
+
 #endif
 
 

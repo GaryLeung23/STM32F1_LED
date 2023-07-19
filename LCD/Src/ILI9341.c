@@ -3,8 +3,7 @@
 
 static void ILI9341_RegConfig(void);
 
-void ILI9341_Init(void)
-{
+void ILI9341_Init(void) {
     ILI9341_RegConfig();
     LCD_GRAM_Scan(0);
     LCD_Clear(WHITE);
@@ -194,8 +193,8 @@ static void ILI9341_RegConfig(void)
     LCD_Write_Cmd(0xC1);    //Power control
     LCD_Write_Data(0x01);   //SAP[2:0];BT[3:0]
     LCD_Write_Cmd(0xC5);    //VCM control
-    LCD_Write_Data(0x30); 	 //3F
-    LCD_Write_Data(0x30); 	 //3C
+    LCD_Write_Data(0x30);     //3F
+    LCD_Write_Data(0x30);     //3C
     LCD_Write_Cmd(0xC7);    //VCM control2
     LCD_Write_Data(0XB7);
     LCD_Write_Cmd(0x36);    // Memory Access Control

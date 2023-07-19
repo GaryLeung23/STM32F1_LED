@@ -1,12 +1,17 @@
-#include "../Pages/AppFactory.h"
-#include "../Pages/_Template/Template.h"
-#include "../PageManager/PageManager.h"
-#include "../Resource/ResourcePool.h"
+#include "AppFactory.h"
+#include "_Template/Template.h"
+#include "StatusBar/StatusBar.h"
 
 
+#define ACCOUNT_SEND_CMD(ACT, CMD) \
+do{ \
+    DataProc::ACT##_Info_t info; \
+    DATA_PROC_INIT_STRUCT(info); \
+    info.cmd = DataProc::CMD; \
+    DataProc::Center()->AccountMain.Notify(#ACT, &info, sizeof(info)); \
+}while(0)
 
-void App_Init()
-{
+void App_Init() {
     static AppFactory factory;
     static PageManager manager(&factory);
 
@@ -29,20 +34,20 @@ void App_Init()
 #endif
 
     /* Make sure the default group exists */
-    if(!lv_group_get_default())
-    {
-        lv_group_t* group = lv_group_create();
+    if (!lv_group_get_default()) {
+        lv_group_t *group = lv_group_create();
         //lv_indev_set_group(indev, group);
         lv_group_set_default(group);
     }
 
+
     /* Initialize the data processing node */
-    //    DataProc_Init();
-    //    ACCOUNT_SEND_CMD(Storage, STORAGE_CMD_LOAD);
-    //    ACCOUNT_SEND_CMD(SysConfig, SYSCONFIG_CMD_LOAD);
+    DataProc_Init();
+    ACCOUNT_SEND_CMD(Storage, STORAGE_CMD_LOAD);//load json file
+    ACCOUNT_SEND_CMD(SysConfig, SYSCONFIG_CMD_LOAD);//Configure system settings based on json file
 
     /* Set screen style */
-    lv_obj_t* scr = lv_scr_act();
+    lv_obj_t *scr = lv_scr_act();
     lv_obj_remove_style_all(scr);
     lv_obj_set_style_bg_opa(lv_scr_act(), LV_OPA_COVER, 0);
     lv_obj_set_style_bg_color(lv_scr_act(), lv_color_black(), 0);
@@ -62,23 +67,28 @@ void App_Init()
     ResourcePool::Init();
 
     /* Initialize status bar */
-    //Page::StatusBar_Create(lv_layer_top());
+    Page::StatusBar_Create(lv_layer_top());
+
+
 
     /* Initialize pages */
-    manager.Install("Template",    "Pages/_Template");
+//    manager.Install("Template", "Pages/_Template");
     manager.Install("SystemInfos", "Pages/SystemInfos");
+    manager.Install("Startup", "Pages/Startup");
+    manager.Install("Dialplate", "Pages/Dialplate");
+    manager.Install("LiveMap", "Pages/LiveMap");
 
     manager.SetGlobalLoadAnimType(PageManager::LOAD_ANIM_OVER_TOP);
 
 
-    //manager.Push("Pages/_Template");
-    manager.Push("Pages/SystemInfos");
+    manager.Push("Pages/Startup");
 
-
+    ACCOUNT_SEND_CMD(Storage, STORAGE_CMD_SAVE);
 }
 
 
-void App_Uninit()
-{
-
+void App_Uninit(void) {
+    ACCOUNT_SEND_CMD(SysConfig, SYSCONFIG_CMD_SAVE);
+    ACCOUNT_SEND_CMD(Storage, STORAGE_CMD_SAVE);
+    ACCOUNT_SEND_CMD(Recorder, RECORDER_CMD_STOP);
 }

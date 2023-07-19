@@ -23,14 +23,12 @@
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始写入sz个字
 */
-void SRAM_WriteBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz)
-{
+void SRAM_WriteBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz) {
     uint32_t i = 0;
-    __IO uint32_t offset = (uint32_t)addr;
+    __IO uint32_t offset = (uint32_t) addr;
 
-    for(i=0; i<sz; i++)
-    {
-        *(__IO uint32_t *)(IS62WV51216_BASE_ADDR + offset) = pdata[i];
+    for (i = 0; i < sz; i++) {
+        *(__IO uint32_t *) (IS62WV51216_BASE_ADDR + offset) = pdata[i];
         offset += 4;;
     }
 }
@@ -44,14 +42,12 @@ void SRAM_WriteBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz)
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始读出sz个字
 */
-void SRAM_ReadBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz)
-{
+void SRAM_ReadBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz) {
     uint16_t i = 0;
-    __IO uint32_t offset = (uint32_t)addr;
+    __IO uint32_t offset = (uint32_t) addr;
 
-    for(i=0; i<sz; i++)
-    {
-        pdata[i] = *(__IO uint32_t *)(IS62WV51216_BASE_ADDR + offset);
+    for (i = 0; i < sz; i++) {
+        pdata[i] = *(__IO uint32_t *) (IS62WV51216_BASE_ADDR + offset);
         offset += 4;
     }
 }
@@ -65,14 +61,12 @@ void SRAM_ReadBufferWord(uint32_t *pdata, uint32_t addr, uint32_t sz)
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始写入sz个半字
 */
-void SRAM_WriteBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz)
-{
+void SRAM_WriteBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz) {
     uint32_t i = 0;
-    __IO uint16_t offset = (uint16_t)addr;
+    __IO uint16_t offset = (uint16_t) addr;
 
-    for(i=0; i<sz; i++)
-    {
-        *(__IO uint16_t *)(IS62WV51216_BASE_ADDR + offset) = pdata[i];
+    for (i = 0; i < sz; i++) {
+        *(__IO uint16_t *) (IS62WV51216_BASE_ADDR + offset) = pdata[i];
         offset += 2;
     }
 }
@@ -86,17 +80,16 @@ void SRAM_WriteBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz)
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始读出sz个半字
 */
-void SRAM_ReadBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz)
-{
+void SRAM_ReadBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz) {
     uint16_t i = 0;
-    __IO uint16_t offset = (uint16_t)addr;
+    __IO uint16_t offset = (uint16_t) addr;
 
-    for(i=0; i<sz; i++)
-    {
-        pdata[i] = *(__IO uint16_t *)(IS62WV51216_BASE_ADDR + offset);
+    for (i = 0; i < sz; i++) {
+        pdata[i] = *(__IO uint16_t *) (IS62WV51216_BASE_ADDR + offset);
         offset += 2;
     }
 }
+
 /*
  *  函数名：void SRAM_WriteBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
  *  输入参数：pdata->要写入数据的首地址
@@ -106,17 +99,16 @@ void SRAM_ReadBufferHalfWord(uint16_t *pdata, uint32_t addr, uint16_t sz)
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始写入sz个字节
 */
-void SRAM_WriteBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
-{
+void SRAM_WriteBufferBytes(uint8_t *pdata, uint32_t addr, uint16_t sz) {
     uint32_t i = 0;
-    __IO uint8_t offset = (uint8_t)addr;
+    __IO uint8_t offset = (uint8_t) addr;
 
-    for(i=0; i<sz; i++)
-    {
-        *(__IO uint8_t *)(IS62WV51216_BASE_ADDR + offset) = pdata[i];
+    for (i = 0; i < sz; i++) {
+        *(__IO uint8_t *) (IS62WV51216_BASE_ADDR + offset) = pdata[i];
         offset++;
     }
 }
+
 /*
  *  函数名：void SRAM_ReadBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
  *  输入参数：pdata->要读出数据的首地址
@@ -126,19 +118,17 @@ void SRAM_WriteBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
  *  返回值：无
  *  函数作用：往片外RAM地址addr开始读出sz个字节
 */
-void SRAM_ReadBufferBytes(uint8_t* pdata, uint32_t addr, uint16_t sz)
-{
+void SRAM_ReadBufferBytes(uint8_t *pdata, uint32_t addr, uint16_t sz) {
     uint16_t i = 0;
-    __IO uint8_t offset = (uint8_t)addr;
+    __IO uint8_t offset = (uint8_t) addr;
 
-    for(i=0; i<sz; i++)
-    {
-        pdata[i] = *(__IO uint8_t *)(IS62WV51216_BASE_ADDR + offset);
+    for (i = 0; i < sz; i++) {
+        pdata[i] = *(__IO uint8_t *) (IS62WV51216_BASE_ADDR + offset);
         offset++;
     }
 }
 
-uint8_t  ExtSRAM_test(void){
+uint8_t ExtSRAM_test(void) {
     uint8_t wbuf[32];
     uint8_t rbuf[32];
     int8_t res = 0;
@@ -150,8 +140,8 @@ uint8_t  ExtSRAM_test(void){
     SRAM_ReadBufferBytes(rbuf, 0xF0000, sizeof(wbuf));
 
     for (int i = 0; i < sizeof(wbuf); i++) {
-        if(rbuf[i] != wbuf[i]){
-            res =-1;
+        if (rbuf[i] != wbuf[i]) {
+            res = -1;
             break;
         }
     }
@@ -165,10 +155,10 @@ extern char _siextsram[];
 extern char _sext_sram[];
 extern char _eext_sram[];
 
-void CopyFlashDataToExtSRAM(void){
+void CopyFlashDataToExtSRAM(void) {
     uint32_t org;
     uint32_t des;
-    org = (uint32_t)_siextsram;
-    des = (uint32_t)_sext_sram - IS62WV51216_BASE_ADDR ;
-    SRAM_WriteBufferWord((uint32_t*)org, des, (_eext_sram - _sext_sram)/4);
+    org = (uint32_t) _siextsram;
+    des = (uint32_t) _sext_sram - IS62WV51216_BASE_ADDR;
+    SRAM_WriteBufferWord((uint32_t *) org, des, (_eext_sram - _sext_sram) / 4);
 }

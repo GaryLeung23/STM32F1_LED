@@ -55,7 +55,7 @@ void TonePlayer::Stop()
 {
     CurrentPos = Length;
 }
-
+//定时更新
 bool TonePlayer::Update(uint32_t tick)
 {
     if (CallbackFunction == nullptr)
@@ -63,17 +63,22 @@ bool TonePlayer::Update(uint32_t tick)
         return false;
     }
 
+    //仍需要播放
     if(CurrentPos < Length)
     {
+        //tick大于上次设置的时间点NextTime
         if(tick > NextTime)
         {
+
             CallbackFunction(CurrentMusic[CurrentPos].Freq, CurrentMusic[CurrentPos].Volume);
 
+            //计算下次切换Tone的时间点
             NextTime = tick + CurrentMusic[CurrentPos].Time * Speed / SPEED_NORMAL;
-            CurrentPos++;
+            CurrentPos++;//Tone Pos 加1
         }
         return true;
     }
+    //收尾工作
     else if(CurrentPos == Length && tick > NextTime)
     {
         CallbackFunction(0, 0);

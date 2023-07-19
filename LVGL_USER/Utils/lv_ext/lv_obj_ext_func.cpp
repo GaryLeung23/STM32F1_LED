@@ -22,13 +22,11 @@
  */
 #include "lv_obj_ext_func.h"
 
-void lv_obj_set_opa_scale(lv_obj_t* obj, int16_t opa)
-{
-    lv_obj_set_style_bg_opa(obj, (lv_opa_t)opa, LV_PART_MAIN);
+void lv_obj_set_opa_scale(lv_obj_t *obj, int16_t opa) {
+    lv_obj_set_style_bg_opa(obj, (lv_opa_t) opa, LV_PART_MAIN);
 }
 
-int16_t lv_obj_get_opa_scale(lv_obj_t* obj)
-{
+int16_t lv_obj_get_opa_scale(lv_obj_t *obj) {
     return lv_obj_get_style_bg_opa(obj, LV_PART_MAIN);
 }
 
@@ -38,12 +36,11 @@ int16_t lv_obj_get_opa_scale(lv_obj_t* obj)
   * @param  text:追加的字符串
   * @retval 无
   */
-void lv_label_set_text_add(lv_obj_t * label, const char * text)
-{
-    if(!label)
+void lv_label_set_text_add(lv_obj_t *label, const char *text) {
+    if (!label)
         return;
 
-    lv_label_ins_text(label, (uint32_t)strlen(lv_label_get_text(label)), text);
+    lv_label_ins_text(label, (uint32_t) strlen(lv_label_get_text(label)), text);
 }
 
 /**
@@ -60,19 +57,17 @@ void lv_label_set_text_add(lv_obj_t * label, const char * text)
   * @retval 无
   */
 void lv_obj_add_anim(
-    lv_obj_t * obj, lv_anim_t * a,
-    lv_anim_exec_xcb_t exec_cb,
-    int32_t start, int32_t end,
-    uint16_t time,
-    uint32_t delay,
-    lv_anim_ready_cb_t ready_cb,
-    lv_anim_path_cb_t path_cb
-)
-{
+        lv_obj_t *obj, lv_anim_t *a,
+        lv_anim_exec_xcb_t exec_cb,
+        int32_t start, int32_t end,
+        uint16_t time,
+        uint32_t delay,
+        lv_anim_ready_cb_t ready_cb,
+        lv_anim_path_cb_t path_cb
+) {
     lv_anim_t anim_temp;
 
-    if (a == NULL)
-    {
+    if (a == NULL) {
         a = &anim_temp;
 
         /* INITIALIZE AN ANIMATION
@@ -116,19 +111,15 @@ void lv_obj_add_anim(
     lv_anim_start(a);                             /*Start the animation*/
 }
 
-lv_indev_t* lv_get_indev(lv_indev_type_t type)
-{
-    lv_indev_t* cur_indev = NULL;
-    for (;;)
-    {
+lv_indev_t *lv_get_indev(lv_indev_type_t type) {
+    lv_indev_t *cur_indev = NULL;
+    for (;;) {
         cur_indev = lv_indev_get_next(cur_indev);
-        if (!cur_indev)
-        {
+        if (!cur_indev) {
             break;
         }
 
-        if (cur_indev->driver->type == type)
-        {
+        if (cur_indev->driver->type == type) {
             return cur_indev;
         }
     }

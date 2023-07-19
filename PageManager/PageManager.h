@@ -94,12 +94,12 @@ public:
     /* Page loading animation properties */
     typedef struct
     {
-        lv_anim_setter_t setter;	//����ָ��  ��������anim��ֵ
-        lv_anim_getter_t getter;	//����ָ��  ���ڵõ�anim��ֵ
+        lv_anim_setter_t setter;	//函数指针  用于设置anim的值
+        lv_anim_getter_t getter;	//函数指针  用于得到anim的值
         RootDragDir_t dragDir;		
         AnimValue_t push;					//
         AnimValue_t pop;					//
-    } LoadAnimAttr_t;
+    } LoadAnimAttr_t;//页面切换这个过程中的动画属性
 
 public:
     PageManager(PageFactory* factory = nullptr);
@@ -161,7 +161,7 @@ private:
         return (LoadAnim_t)_AnimState.Current.Type;
     }
 
-    /* Root */
+    /* Drag */
     static void onRootDragEvent(lv_event_t* event);
     static void onRootDragAnimFinish(lv_anim_t* a);
     static void onRootAsyncLeave(void* base);
@@ -209,13 +209,13 @@ private:
     /* Page animation status */
     struct
     {
-        bool IsSwitchReq;              // Has switch request
-        bool IsBusy;                   // Is switching
-        bool IsEntering;               // Is in entering action
+        bool IsSwitchReq;              // Has switch request     当前系统是否有页面切换请求，从SwitchTo开始直到page切换动画完成
+        bool IsBusy;                   // Is switching           当前系统是否busy，目前只运用在Drag操作下恢复原样的情况下。
+        bool IsEntering;               // Is in entering action  当前系统页面切换是否是enter状态（还有exit状态）
 
         PageBase::AnimAttr_t Current;  // Current animation properties
         PageBase::AnimAttr_t Global;   // Global animation properties
-    } _AnimState;
+    } _AnimState;//系统页面动画状态与配置,将某个page的anim配置设置到这里
 
     /* Root style */
     lv_style_t* _RootDefaultStyle;

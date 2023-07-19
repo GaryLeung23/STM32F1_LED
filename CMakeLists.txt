@@ -49,12 +49,11 @@ else ()
     add_compile_options(-Og -g)
 endif ()
 
-include_directories(Core/Inc Drivers/STM32F1xx_HAL_Driver/Inc Drivers/STM32F1xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32F1xx/Include Drivers/CMSIS/Include FATFS/Target FATFS/App Middlewares/Third_Party/FatFs/src Middlewares/Third_Party/FatFs/src/drivers LCD/Inc LVGL_PORT/Inc LVGL/src/core LVGL/src/hal  EXTSRAM/Inc KEY/Inc PageManager  APP/Inc Pages Resource ResourceManager TonePlayer Music BEEP LVGL_USER )
+include_directories(Core/Inc Drivers/STM32F1xx_HAL_Driver/Inc Drivers/STM32F1xx_HAL_Driver/Inc/Legacy Drivers/CMSIS/Device/ST/STM32F1xx/Include Drivers/CMSIS/Include FATFS/Target FATFS/App Middlewares/Third_Party/FatFs/src Middlewares/Third_Party/FatFs/src/drivers LCD/Inc LVGL_PORT/Inc LVGL/src/core LVGL/src/hal  EXTSRAM/Inc KEY/Inc PageManager  APP/Inc Pages Resource ResourceManager TonePlayer Music BEEP LVGL_USER DataCenter DataProc TIME IMU MAG GPS UTILS POWER SDCard ArduinoJson/src MapConv)
 
 add_definitions(-DUSE_HAL_DRIVER -DSTM32F103xE)
 
-file(GLOB_RECURSE SOURCES "Middlewares/*.*" "FATFS/*.*" "startup/*.*" "Drivers/*.*" "Core/*.*" "LCD/*.*" "LVGL/src/*.*" "LVGL_PORT/*.*" "LVGL_USER/*.*" "EXTSRAM/*.*" "KEY/*.*" "PageManager/*.*" "Pages/*.*" "APP/*.*" "Resource/*.*" "ResourceManager/*.*" "Music/*.*" "TonePlayer/*.*" "BEEP/*.*")
-
+file(GLOB_RECURSE SOURCES "Middlewares/*.*" "FATFS/*.*" "startup/*.*" "Drivers/*.*" "Core/*.*" "LCD/*.*" "LVGL/src/*.*" "LVGL_PORT/*.*" "LVGL_USER/*.*" "EXTSRAM/*.*" "KEY/*.*" "PageManager/*.*" "Pages/*.*" "APP/*.*" "Resource/*.*" "ResourceManager/*.*" "Music/*.*" "TonePlayer/*.*" "BEEP/*.*" "DataCenter/*.*" "DataProc/*.*" "TIME/*.*" "GPS/*.*" "IMU/*.*" "MAG/*.*" "UTILS/*.*" "POWER/*.*" "SDCard/*.*" "MapConv/*.*")
 set(LINKER_SCRIPT ${CMAKE_SOURCE_DIR}/STM32F103ZETx_FLASH.ld)
 
 add_link_options(-Wl,-gc-sections,--print-memory-usage,-Map=${PROJECT_BINARY_DIR}/${PROJECT_NAME}.map)

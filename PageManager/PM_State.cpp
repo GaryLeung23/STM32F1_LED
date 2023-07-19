@@ -41,7 +41,7 @@ void PageManager::StateUpdate(PageBase* base)
 
     case PageBase::PAGE_STATE_LOAD:
         base->priv.State = StateLoadExecute(base);
-        StateUpdate(base);
+        StateUpdate(base);//PAGE_STATE_WILL_APPEAR -> PAGE_STATE_DID_APPEAR
         break;
 
     case PageBase::PAGE_STATE_WILL_APPEAR:
@@ -56,7 +56,7 @@ void PageManager::StateUpdate(PageBase* base)
     case PageBase::PAGE_STATE_ACTIVITY:
         PM_LOG_INFO("Page(%s) state active break", base->_Name);
         base->priv.State = PageBase::PAGE_STATE_WILL_DISAPPEAR;
-        StateUpdate(base);
+        StateUpdate(base);//PAGE_STATE_WILL_DISAPPEAR ->   PAGE_STATE_DID_DISAPPEAR
         break;
 
     case PageBase::PAGE_STATE_WILL_DISAPPEAR:
@@ -67,7 +67,7 @@ void PageManager::StateUpdate(PageBase* base)
         base->priv.State = StateDidDisappearExecute(base);
         if (base->priv.State == PageBase::PAGE_STATE_UNLOAD)
         {
-            StateUpdate(base);
+            StateUpdate(base);//PAGE_STATE_UNLOAD ->  PAGE_STATE_IDLE 
         }
         break;
 
@@ -90,6 +90,7 @@ PageBase::State_t PageManager::StateLoadExecute(PageBase* base)
 {
     PM_LOG_INFO("Page(%s) state load", base->_Name);
 
+    
     if (base->_root != nullptr)
     {
         PM_LOG_ERROR("Page(%s) root must be nullptr", base->_Name);
@@ -98,20 +99,22 @@ PageBase::State_t PageManager::StateLoadExecute(PageBase* base)
     lv_obj_t* root_obj = lv_obj_create(lv_scr_act());// create root obj
     
     lv_obj_clear_flag(root_obj, LV_OBJ_FLAG_SCROLLABLE);
-    lv_obj_set_user_data(root_obj, base);
+    lv_obj_set_user_data(root_obj, base);// set user data,RootEnableDrag里面会用到
 
+    //对root_obj设置默认的style
     if (_RootDefaultStyle)
     {
         lv_obj_add_style(root_obj, _RootDefaultStyle, LV_PART_MAIN);
     }
 
-    base->_root = root_obj;
-    base->onViewLoad();//
+    base->_root = root_obj;//_root在这里赋值
+    base->onViewLoad();//调用该page 重载的onViewLoad函数
 
+    //anim是Over类型的anim
     if (GetIsOverAnim(GetCurrentLoadAnimType()))
     {
         PageBase* bottomPage = GetStackTopAfter();
-
+        //如果bottompage不为空且IsCached为true
         if (bottomPage != nullptr && bottomPage->priv.IsCached)
         {
             LoadAnimAttr_t animAttr;
@@ -119,14 +122,15 @@ PageBase::State_t PageManager::StateLoadExecute(PageBase* base)
             {
                 if (animAttr.dragDir != ROOT_DRAG_DIR_NONE)
                 {
-                    RootEnableDrag(base->_root);
+                    RootEnableDrag(base->_root);//Enable root's drag function
                 }
             }
         }
     }
 
-    base->onViewDidLoad();//
+    base->onViewDidLoad();//调用该page 重载的onViewDidLoad函数
 
+    //set IsCached flag
     if (base->priv.IsDisableAutoCache)
     {
         PM_LOG_INFO("Page(%s) disable auto cache, ReqEnableCache = %d", base->_Name, base->priv.ReqEnableCache);
@@ -149,9 +153,9 @@ PageBase::State_t PageManager::StateLoadExecute(PageBase* base)
 PageBase::State_t PageManager::StateWillAppearExecute(PageBase* base)
 {
     PM_LOG_INFO("Page(%s) state will appear", base->_Name);
-    base->onViewWillAppear();//
-    lv_obj_clear_flag(base->_root, LV_OBJ_FLAG_HIDDEN);
-    SwitchAnimCreate(base);//SwitchAnim
+    base->onViewWillAppear();///调用该page 重载的onViewWillAppear函数
+    lv_obj_clear_flag(base->_root, LV_OBJ_FLAG_HIDDEN);//clear hidden flag
+    SwitchAnimCreate(base);//page switch anim
     return PageBase::PAGE_STATE_DID_APPEAR;
 }
 
@@ -163,7 +167,7 @@ PageBase::State_t PageManager::StateWillAppearExecute(PageBase* base)
 PageBase::State_t PageManager::StateDidAppearExecute(PageBase* base)
 {
     PM_LOG_INFO("Page(%s) state did appear", base->_Name);
-    base->onViewDidAppear();//
+    base->onViewDidAppear();//调用该page 重载的onViewDidAppear函数
     return PageBase::PAGE_STATE_ACTIVITY;
 }
 
@@ -175,8 +179,8 @@ PageBase::State_t PageManager::StateDidAppearExecute(PageBase* base)
 PageBase::State_t PageManager::StateWillDisappearExecute(PageBase* base)
 {
     PM_LOG_INFO("Page(%s) state will disappear", base->_Name);
-    base->onViewWillDisappear();//
-    SwitchAnimCreate(base);//SwitchAnim
+    base->onViewWillDisappear();///调用该page 重载的onViewWillDisappear函数
+    SwitchAnimCreate(base);////page switch anim
     return PageBase::PAGE_STATE_DID_DISAPPEAR;
 }
 
@@ -188,8 +192,8 @@ PageBase::State_t PageManager::StateWillDisappearExecute(PageBase* base)
 PageBase::State_t PageManager::StateDidDisappearExecute(PageBase* base)
 {
     PM_LOG_INFO("Page(%s) state did disappear", base->_Name);
-    lv_obj_add_flag(base->_root, LV_OBJ_FLAG_HIDDEN);
-    base->onViewDidDisappear();//
+    lv_obj_add_flag(base->_root, LV_OBJ_FLAG_HIDDEN);////set hidden flag
+    base->onViewDidDisappear();///调用该page 重载的onViewDidDisappear函数
     if (base->priv.IsCached)
     {
         PM_LOG_INFO("Page(%s) has cached", base->_Name);
@@ -215,7 +219,9 @@ PageBase::State_t PageManager::StateUnloadExecute(PageBase* base)
         goto Exit;
     }
 
-    base->onViewUnload();//
+    base->onViewUnload();//调用该page 重载的onViewUnload函数
+
+    //释放Stash
     if (base->priv.Stash.ptr != nullptr && base->priv.Stash.size != 0)
     {
         PM_LOG_INFO("Page(%s) free stash(0x%p)[%d]", base->_Name, base->priv.Stash.ptr, base->priv.Stash.size);
@@ -227,8 +233,8 @@ PageBase::State_t PageManager::StateUnloadExecute(PageBase* base)
     /* Delete after the end of the root animation life cycle */
     lv_obj_del_async(base->_root);//它会在下次调用 lv_timer_handler 时删除该对象
     base->_root = nullptr;
-    base->priv.IsCached = false;
-    base->onViewDidUnload();//
+    base->priv.IsCached = false;//clear IsCached flag
+    base->onViewDidUnload();//调用该page 重载的onViewDidUnload函数
 
 Exit:
     return PageBase::PAGE_STATE_IDLE;

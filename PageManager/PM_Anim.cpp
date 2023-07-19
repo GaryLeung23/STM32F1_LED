@@ -36,14 +36,14 @@ bool PageManager::GetLoadAnimAttr(uint8_t anim, LoadAnimAttr_t* attr)
 
     switch (anim)
     {
-    case LOAD_ANIM_OVER_LEFT:  //LEFT表示Push过程是向左进行的，Pop过程原路返回
+    case LOAD_ANIM_OVER_LEFT:  //LEFT琛ㄧずPush杩囩▼鏄悜宸﹁繘琛岀殑锛孭op杩囩▼鍘熻矾杩斿洖
         attr->dragDir = ROOT_DRAG_DIR_HOR;
-				//push为obj push的过程，enter表示替换的obj，exit表示被替换的obj
+				//push涓簅bj push鐨勮繃绋嬶紝enter琛ㄧず鏇挎崲鐨刼bj锛宔xit琛ㄧず琚浛鎹㈢殑obj
         attr->push.enter.start = hor;	
         attr->push.enter.end = 0;
         attr->push.exit.start = 0;
         attr->push.exit.end = 0;
-				//pop为obj pop的过程，enter表示替换的obj，exit表示被替换的obj
+				//pop涓簅bj pop鐨勮繃绋嬶紝enter琛ㄧず鏇挎崲鐨刼bj锛宔xit琛ㄧず琚浛鎹㈢殑obj
         attr->pop.enter.start = 0;
         attr->pop.enter.end = 0;
         attr->pop.exit.start = 0;
@@ -194,6 +194,7 @@ bool PageManager::GetLoadAnimAttr(uint8_t anim, LoadAnimAttr_t* attr)
             return (int32_t)lv_obj_get_y((lv_obj_t*)obj);
         };
     }
+    //Fade animation
     else
     {
         attr->setter = [](void* obj, int32_t v)

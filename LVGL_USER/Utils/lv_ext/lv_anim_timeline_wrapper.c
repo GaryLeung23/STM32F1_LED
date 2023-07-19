@@ -1,10 +1,8 @@
 #include "lv_anim_timeline_wrapper.h"
 
-void lv_anim_timeline_add_wrapper(lv_anim_timeline_t* at, const lv_anim_timeline_wrapper_t* wrapper)
-{
-    for(uint32_t i = 0; wrapper[i].obj != NULL; i++)
-    {
-        const lv_anim_timeline_wrapper_t* atw = &wrapper[i];
+void lv_anim_timeline_add_wrapper(lv_anim_timeline_t *at, const lv_anim_timeline_wrapper_t *wrapper) {
+    for (uint32_t i = 0; wrapper[i].obj != NULL; i++) {
+        const lv_anim_timeline_wrapper_t *atw = &wrapper[i];
 
         lv_anim_t a;
         lv_anim_init(&a);
@@ -15,6 +13,6 @@ void lv_anim_timeline_add_wrapper(lv_anim_timeline_t* at, const lv_anim_timeline
         lv_anim_set_path_cb(&a, atw->path_cb);
         lv_anim_set_early_apply(&a, atw->early_apply);
 
-        lv_anim_timeline_add(at, atw->start_time, &a);
+        lv_anim_timeline_add(at, atw->start_time, &a);//添加到timeline中
     }
 }

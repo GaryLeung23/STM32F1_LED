@@ -28,6 +28,7 @@
 #define VERSION_SOFTWARE        "v2.7"
 #define VERSION_HARDWARE        "v1.0"
 #define VERSION_AUTHOR_NAME     "GaryLeung"
+#define VERSION_PROJECT_LINK    "https://github.com/this is a test/X-TRACK"
 
 
 /* Number to string macro */
@@ -36,6 +37,7 @@
 
 /* LVGL Version */
 #include "../../lvgl/lvgl.h"
+
 #define VERSION_LVGL            "v"\
                                 VERSION_NUM_TO_STR(LVGL_VERSION_MAJOR)\
                                 "."\
@@ -51,7 +53,7 @@
 #  include "SdFat.h"
 #  define VERSION_FILESYSTEM    "SDFAT v" VERSION_NUM_TO_STR(SD_FAT_VERSION)
 #else
-#  define VERSION_FILESYSTEM    "STDC"
+#  define VERSION_FILESYSTEM    "FATFS R0.11"
 #endif
 
 

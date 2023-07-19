@@ -27,19 +27,24 @@
  **********************/
 
 static void touchpad_init(void);
-static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
+
+static void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+
 static bool touchpad_is_pressed(void);
-static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y);
+
+static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y);
 
 static void keypad_init(void);
-static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data);
+
+static void keypad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data);
+
 static uint32_t keypad_get_key(void);
 
 /**********************
  *  STATIC VARIABLES
  **********************/
-lv_indev_t * indev_touchpad;
-lv_indev_t * indev_keypad;
+lv_indev_t *indev_touchpad;
+lv_indev_t *indev_keypad;
 
 /**********************
  *      MACROS
@@ -49,8 +54,7 @@ lv_indev_t * indev_keypad;
  *   GLOBAL FUNCTIONS
  **********************/
 
-void lv_port_indev_init(void)
-{
+void lv_port_indev_init(void) {
     /**
      * Here you will find example implementation of input devices supported by LittelvGL:
      *  - Touchpad
@@ -98,7 +102,7 @@ void lv_port_indev_init(void)
      *and assign this input device to group to navigate in it:
      *`lv_indev_set_group(indev_keypad, group);`*/
 
-    lv_group_t* group = lv_group_create();
+    lv_group_t *group = lv_group_create();
     lv_indev_set_group(indev_keypad, group);
     lv_group_set_default(group);
 
@@ -113,24 +117,21 @@ void lv_port_indev_init(void)
  * -----------------*/
 
 /*Initialize your touchpad*/
-static void touchpad_init(void)
-{
+static void touchpad_init(void) {
     /*Your code comes here*/
     //XPT2046_Init();
 }
 
 /*Will be called by the library to read the touchpad*/
-static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
-{
+static void touchpad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
     static lv_coord_t last_x = 0;
     static lv_coord_t last_y = 0;
 
     /*Save the pressed coordinates and the state*/
-    if(touchpad_is_pressed()) {
+    if (touchpad_is_pressed()) {
         touchpad_get_xy(&last_x, &last_y);
         data->state = LV_INDEV_STATE_PR;
-    }
-    else {
+    } else {
         data->state = LV_INDEV_STATE_REL;
     }
 
@@ -140,8 +141,7 @@ static void touchpad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 }
 
 /*Return true is the touchpad is pressed*/
-static bool touchpad_is_pressed(void)
-{
+static bool touchpad_is_pressed(void) {
     /*Your code comes here*/
 
 
@@ -149,8 +149,7 @@ static bool touchpad_is_pressed(void)
 }
 
 /*Get the x and y coordinates if the touchpad is pressed*/
-static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
-{
+static void touchpad_get_xy(lv_coord_t *x, lv_coord_t *y) {
     /*Your code comes here*/
 
     (*x) = 0;
@@ -163,44 +162,44 @@ static void touchpad_get_xy(lv_coord_t * x, lv_coord_t * y)
  * -----------------*/
 
 /*Initialize your keypad*/
-static void keypad_init(void)
-{
+static void keypad_init(void) {
     /*Your code comes here*/
 }
 
 /*Will be called by the library to read the mouse*/
-static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
-{
+static void keypad_read(lv_indev_drv_t *indev_drv, lv_indev_data_t *data) {
     static uint32_t last_key = 0;
 
     /*Get whether the a key is pressed and save the pressed key*/
     uint32_t act_key = keypad_get_key();
-    //printf("act_key: %d\n", act_key);
-    if(act_key != 0) {
+
+    if (act_key != 0) {
+//        printf("act_key: %d\n", act_key);
         data->state = LV_INDEV_STATE_PR;
 
         /*Translate the keys to LVGL control characters according to your key definitions*/
-        switch(act_key) {
+        switch (act_key) {
             case MY_KEY_DOWN:
-                act_key = LV_KEY_PREV;
+                if(GetKeyUserMode() !=  MODE_GROUP)
+                    act_key = LV_KEY_DOWN;
+                else
+                    act_key = LV_KEY_PREV;
+//                act_key = LV_KEY_PREV;
                 break;
             case MY_KEY_UP:
-                act_key = LV_KEY_NEXT;
+                if(GetKeyUserMode() !=  MODE_GROUP)
+                    act_key = LV_KEY_UP;
+                else
+                    act_key = LV_KEY_NEXT;
+//                act_key = LV_KEY_NEXT;
                 break;
-//            case MY_KEY_LEFT:
-//                act_key = LV_KEY_LEFT;
-//                break;
-//            case MY_KEY_RIGHT:
-//                act_key = LV_KEY_RIGHT;
-//                break;
             case MY_KEY_RIGHT:
                 act_key = LV_KEY_ENTER;
                 break;
         }
 
         last_key = act_key;
-    }
-    else {
+    } else {
         data->state = LV_INDEV_STATE_REL;
     }
 
@@ -208,8 +207,7 @@ static void keypad_read(lv_indev_drv_t * indev_drv, lv_indev_data_t * data)
 }
 
 /*Get the currently being pressed key.  0 if no key is pressed*/
-static uint32_t keypad_get_key(void)
-{
+static uint32_t keypad_get_key(void) {
     /*Your code comes here*/
 
     return Key_Scan();

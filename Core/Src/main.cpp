@@ -18,6 +18,7 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "adc.h"
 #include "fatfs.h"
 #include "rtc.h"
 #include "sdio.h"
@@ -33,11 +34,17 @@
 #include "../../LVGL_PORT/Inc/lv_port_indev.h"
 #include "../../LVGL_PORT/Inc/lv_port_fs_fatfs.h"
 #include "../../LVGL_USER/lvgl_user.h"
-#include "../../LCD/Inc/XPT2046.h"
+
 #include "../BEEP/Audio.h"
 #include "../BEEP/Buzz.h"
 
 #include "../../APP/Inc/App.h"
+#include "gps.h"
+#include "imu.h"
+#include "mag.h"
+#include "power.h"
+#include "sdcard.h"
+
 
 
 #include <stdio.h>
@@ -79,7 +86,7 @@ void SystemClock_Config(void);
 extern "C" {
 #endif
 PUTCHAR_PROTOTYPE {
-    HAL_UART_Transmit(&huart1, (uint8_t *) &ch, 1, HAL_MAX_DELAY);//huart1�?????????????????要根据你的配置修�?????????????????
+    HAL_UART_Transmit(&huart1, (uint8_t *) &ch, 1, HAL_MAX_DELAY);//huart1�??????????????????要根据你的配置修�??????????????????
     return ch;
 }
 GETCHAR_PROTOTYPE {
@@ -128,8 +135,10 @@ int main(void)
   MX_FATFS_Init();
   MX_RTC_Init();
   MX_TIM4_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
     CopyFlashDataToExtSRAM();
+    Power_Init();
     HAL_TIM_Base_Start_IT(&htim3);
 
     lv_init();
@@ -137,17 +146,18 @@ int main(void)
     lv_port_indev_init();
     lv_port_fs_init();
 
+    IMU_Init();
+    MAG_Init();
+    GPS_Init();
+
+    SD_Init();
     Buzz_init();
     Audio_Init();
-    Audio_PlayMusic("Disconnect");
-
-//    MX_FATFS_TEST();
-    lvgl_fs_readfile();
-    lvgl_fs_readdir();
-
-
+    Audio_PlayMusic("Startup");
 
     App_Init();
+
+    Power_SetEventCallback(App_Uninit);
 
 
   /* USER CODE END 2 */
@@ -205,8 +215,9 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_RTC|RCC_PERIPHCLK_ADC;
   PeriphClkInit.RTCClockSelection = RCC_RTCCLKSOURCE_LSE;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV2;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();

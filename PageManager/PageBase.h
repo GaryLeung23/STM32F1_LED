@@ -68,7 +68,7 @@ public:
         uint8_t Type;
         uint16_t Time;
         lv_anim_path_cb_t Path;
-    } AnimAttr_t;
+    } AnimAttr_t;//一个动画的属性
 
 public:
     lv_obj_t* _root;       // UI root node
@@ -83,19 +83,20 @@ public:
         bool ReqEnableCache;        // Cache enable request
         bool ReqDisableAutoCache;   // Automatic cache management enable request
 
-        bool IsDisableAutoCache;    // Whether it is automatic cache management
-        bool IsCached;              // Cache enable
+        bool IsDisableAutoCache;    // Whether it is automatic cache management      默认值为0
+        bool IsCached;              // Cache enable  若页面已经缓存，当页面切换时，不需要每次都执行PAGE_STATE_LOAD与PAGE_STATE_UNLOAD状态机的callback，
+                                    // 即减少了load与unload的损耗。 默认值为0,但是经StateLoadExecute函数，会根据IsDisableAutoCache的值，设置为1。
 
-        Stash_t Stash;              // Stash area    ��Stash��ά����û����
+        Stash_t Stash;              // Stash area    操作page时传递的stash的数据
         State_t State;              // Page state
 
         /* Animation state  */
         struct
         {
-            bool IsEnter;           // Whether it is the entering party
-            bool IsBusy;            // Whether the animation is playing
+            bool IsEnter;           // Whether it is the entering party  该页面在页面切换中是否担任 the entering party（还有the exiting party）
+            bool IsBusy;            // Whether the animation is playing  该页面是否在进行页面切换动画
             AnimAttr_t Attr;        // Animation properties
-        } Anim;
+        } Anim;//单个page的动画属性
     } priv;
 
 public:

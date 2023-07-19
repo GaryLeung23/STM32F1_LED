@@ -23,7 +23,9 @@
 #include "AppFactory.h"
 #include "_Template/Template.h"
 #include "SystemInfos/SystemInfos.h"
-
+#include "Startup/Startup.h"
+#include "Dialplate/Dialplate.h"
+#include "LiveMap/LiveMap.h"
 
 
 #define APP_CLASS_MATCH(className)\
@@ -34,12 +36,12 @@ do{\
     }\
 }while(0)
 
-PageBase* AppFactory::CreatePage(const char* name)
-{
-    APP_CLASS_MATCH(Template);
+PageBase *AppFactory::CreatePage(const char *name) {
+//    APP_CLASS_MATCH(Template);
     APP_CLASS_MATCH(SystemInfos);
-
-
+    APP_CLASS_MATCH(Startup);
+    APP_CLASS_MATCH(Dialplate);
+    APP_CLASS_MATCH(LiveMap);
 
     return nullptr;
 }

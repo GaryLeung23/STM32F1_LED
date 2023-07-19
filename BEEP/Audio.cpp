@@ -10,7 +10,7 @@ void Audio_Init()
 {
     player.SetCallback([](uint32_t freq, uint16_t volume)
     {
-        Buzz_Tone(freq);
+        Buzz_Tone(freq);//duration是TONE_DURATION_INFINITE,Tone播放时间在TonePlayer::Update中设定
     });
 }
 //定时更新

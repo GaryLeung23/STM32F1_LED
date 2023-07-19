@@ -28,6 +28,7 @@ extern "C" {
  * GLOBAL PROTOTYPES
  **********************/
 extern uint8_t lvgl_fs_readfile(void);
+
 extern uint8_t lvgl_fs_readdir(void);
 /**********************
  *      MACROS

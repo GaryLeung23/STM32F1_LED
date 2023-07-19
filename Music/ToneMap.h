@@ -2,8 +2,7 @@
 #define __TONE_MAP_H
 
 /*音符频率对应表*/
-enum ToneMap
-{
+enum ToneMap {
     L1 = 262,
     L1h = 277,
     L2 = 294,

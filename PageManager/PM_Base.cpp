@@ -134,7 +134,7 @@ bool PageManager::Install(const char* className, const char* appName)
     PM_LOG_INFO("Install Page[class = %s, name = %s]", className, appName);
     bool retval = Register(base, appName);
 
-		//onCustomAttrConfig status callback function
+	//onCustomAttrConfig status callback function
     base->onCustomAttrConfig();
 
     return retval;
@@ -162,11 +162,12 @@ bool PageManager::Uninstall(const char* appName)
         return false;
     }
 
+    //If the page has cached, unload it
     if (base->priv.IsCached)
     {
         PM_LOG_WARN("Page(%s) has cached, unloading...", appName);
         base->priv.State = PageBase::PAGE_STATE_UNLOAD;
-        StateUpdate(base);
+        StateUpdate(base);//PAGE_STATE_UNLOAD -> PAGE_STATE_IDLE
     }
     else
     {

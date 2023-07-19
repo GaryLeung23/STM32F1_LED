@@ -20,12 +20,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-#include "../PageManager/PageManager.h"
+#include "PageManager.h"
 
-class AppFactory : public PageFactory
-{
+class AppFactory : public PageFactory {
 public:
-    virtual PageBase* CreatePage(const char* name);
+    virtual PageBase *CreatePage(const char *name);
+
 private:
 
 };

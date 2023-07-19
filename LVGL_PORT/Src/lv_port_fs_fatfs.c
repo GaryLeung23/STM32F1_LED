@@ -261,13 +261,13 @@ static lv_fs_res_t fs_tell(lv_fs_drv_t *drv, void *file_p, uint32_t *pos_p) {
  */
 static void *fs_dir_open(lv_fs_drv_t *drv, const char *path) {
     LV_UNUSED(drv);
-    DIR * d = lv_malloc(sizeof(DIR));
-    if(d == NULL)
+    DIR *d = lv_malloc(sizeof(DIR));
+    if (d == NULL)
         return NULL;
 
     FRESULT res = f_opendir(d, path);
-    if(res != FR_OK) {
-        printf("f_opendir failed res:%d\n",res);
+    if (res != FR_OK) {
+        printf("f_opendir failed res:%d\n", res);
         lv_free(d);
         d = NULL;
     }
@@ -290,17 +290,16 @@ static lv_fs_res_t fs_dir_read(lv_fs_drv_t *drv, void *rddir_p, char *fn) {
 
     do {
         res = f_readdir(rddir_p, &fno);
-        if(res != FR_OK)
+        if (res != FR_OK)
             return LV_FS_RES_UNKNOWN;
 
-        if(fno.fattrib & AM_DIR) {
+        if (fno.fattrib & AM_DIR) {
             fn[0] = '/';
             strcpy(&fn[1], fno.fname);
-        }
-        else
+        } else
             strcpy(fn, fno.fname);
 
-    } while(strcmp(fn, "/.") == 0 || strcmp(fn, "/..") == 0);
+    } while (strcmp(fn, "/.") == 0 || strcmp(fn, "/..") == 0);
 
     return LV_FS_RES_OK;
 }

@@ -1,28 +1,26 @@
 #ifndef __SYSTEM_INFOS_VIEW_H
 #define __SYSTEM_INFOS_VIEW_H
 
-#include "../Page.h"
+#include "Page.h"
 
-namespace Page
-{
+namespace Page {
 
-class SystemInfosView
-{
+class SystemInfosView {
 public:
     void Create(lv_obj_t* root);
+    void Group_Init();
+
     void Delete();
 
 public:
-    typedef struct
-    {
+    typedef struct {
         lv_obj_t* cont;
         lv_obj_t* icon;
         lv_obj_t* labelInfo;
         lv_obj_t* labelData;
     } item_t;
 
-    struct
-    {
+    struct {
         item_t sport;
         item_t gps;
         item_t mag;
@@ -37,55 +35,54 @@ public:
     void SetSport(
         float trip,
         const char* time,
-        float maxSpd
-    );
+        float maxSpd);
+
     void SetGPS(
         float lat,
         float lng,
         float alt,
         const char* utc,
         float course,
-        float speed
-    );
+        float speed);
+
     void SetMAG(
         float dir,
         int x,
         int y,
-        int z
-    );
+        int z);
+
     void SetIMU(
         int step,
-        const char* info
-    );
+        const char* info);
+
     void SetRTC(
-        const char* dateTime
-    );
+        const char* dateTime);
+
     void SetBattery(
         int usage,
         float voltage,
-        const char* state
-    );
+        const char* state);
+
     void SetStorage(
         const char* detect,
         const char* size,
         const char* type,
-        const char* version
-    );
+        const char* version);
+
     void SetSystem(
         const char* firmVer,
         const char* authorName,
         const char* lvglVer,
         const char* bootTime,
         const char* compilerName,
-        const char* bulidTime
-    );
+        const char* bulidTime);
 
     void SetScrollToY(lv_obj_t* obj, lv_coord_t y, lv_anim_enable_t en);
+
     static void onFocus(lv_group_t* e);
 
 private:
-    struct
-    {
+    struct {
         lv_style_t icon;
         lv_style_t focus;
         lv_style_t info;
@@ -93,16 +90,18 @@ private:
     } style;
 
 private:
-    void Group_Init();
+
+
     void Style_Init();
+
     void Style_Reset();
+
     void Item_Create(
         item_t* item,
         lv_obj_t* par,
         const char* name,
         const char* img_src,
-        const char* infos
-    );
+        const char* infos);
 };
 
 }

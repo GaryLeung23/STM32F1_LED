@@ -3,17 +3,17 @@
 
 #include "../../lvgl/lvgl.h"
 
-namespace Page
-{
+namespace Page {
 
-class TemplateModel
-{
-public:
-    uint32_t TickSave;
-    uint32_t GetData();
-private:
+    class TemplateModel {
+    public:
+        uint32_t TickSave;
 
-};
+        uint32_t GetData();
+
+    private:
+
+    };
 
 }
 

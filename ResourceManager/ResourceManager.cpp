@@ -29,13 +29,11 @@
 #define RES_LOG_WARN  LV_LOG_WARN
 #define RES_LOG_ERROR LV_LOG_ERROR
 
-ResourceManager::ResourceManager()
-{
+ResourceManager::ResourceManager() {
     DefaultPtr = nullptr;
 }
 
-ResourceManager::~ResourceManager()
-{
+ResourceManager::~ResourceManager() {
 }
 
 /**
@@ -44,12 +42,9 @@ ResourceManager::~ResourceManager()
   * @param  node: Pointer to the resource node
   * @retval Return true if the search is successful
   */
-bool ResourceManager::SearchNode(const char* name, ResourceNode_t* node)
-{
-    for(auto iter : NodePool)
-    {
-        if (strcmp(name, iter.name) == 0)
-        {
+bool ResourceManager::SearchNode(const char *name, ResourceNode_t *node) {
+    for (auto iter: NodePool) {
+        if (strcmp(name, iter.name) == 0) {
             *node = iter;
             return true;
         }
@@ -63,12 +58,10 @@ bool ResourceManager::SearchNode(const char* name, ResourceNode_t* node)
   * @param  ptr: Pointer to the resource
   * @retval Return true if the addition is successful
   */
-bool ResourceManager::AddResource(const char* name, void* ptr)
-{
+bool ResourceManager::AddResource(const char *name, void *ptr) {
     ResourceNode_t node;
-    if (SearchNode(name, &node))
-    {
-        RES_LOG_WARN("Resource: %s was register", name);
+    if (SearchNode(name, &node)) {
+                RES_LOG_WARN("Resource: %s was register", name);
         return false;
     }
 
@@ -76,7 +69,7 @@ bool ResourceManager::AddResource(const char* name, void* ptr)
     node.ptr = ptr;
     NodePool.push_back(node);
 
-    RES_LOG_INFO("Resource: %s[0x%p] add success", node.name, node.ptr);
+            RES_LOG_INFO("Resource: %s[0x%p] add success", node.name, node.ptr);
 
     return true;
 }
@@ -86,27 +79,24 @@ bool ResourceManager::AddResource(const char* name, void* ptr)
   * @param  name: Resource Name
   * @retval Return true if the removal is successful
   */
-bool ResourceManager::RemoveResource(const char* name)
-{
+bool ResourceManager::RemoveResource(const char *name) {
     ResourceNode_t node;
-    if(!SearchNode(name, &node))
-    {
-        RES_LOG_ERROR("Resource: %s was not found", name);
+    if (!SearchNode(name, &node)) {
+                RES_LOG_ERROR("Resource: %s was not found", name);
         return false;
     }
 
-    auto iter = std::find(NodePool.begin(), NodePool.end(), node);//��Ҫ��д==������
+    auto iter = std::find(NodePool.begin(), NodePool.end(), node);//需要重写==操作符
 
-    if (iter == NodePool.end())
-    {
-        RES_LOG_ERROR("Resource: %s was not found", name);
+    if (iter == NodePool.end()) {
+                RES_LOG_ERROR("Resource: %s was not found", name);
         return false;
     }
 
     NodePool.erase(iter);
-		
 
-    RES_LOG_INFO("Resource: %s remove success", name);
+
+            RES_LOG_INFO("Resource: %s remove success", name);
 
     return true;
 }
@@ -116,17 +106,15 @@ bool ResourceManager::RemoveResource(const char* name)
   * @param  name: Resource Name
   * @retval If the acquisition is successful, return the address of the resource, otherwise return the default resource
   */
-void* ResourceManager::GetResource(const char* name)
-{
+void *ResourceManager::GetResource(const char *name) {
     ResourceNode_t node;
 
-    if(!SearchNode(name, &node))
-    {
-        RES_LOG_WARN("Resource: %s was not found, return default[0x%p]", name, DefaultPtr);
+    if (!SearchNode(name, &node)) {
+                RES_LOG_WARN("Resource: %s was not found, return default[0x%p]", name, DefaultPtr);
         return DefaultPtr;
     }
 
-    RES_LOG_INFO("Resource: %s[0x%p] was found", name, node.ptr);
+            RES_LOG_INFO("Resource: %s[0x%p] was found", name, node.ptr);
 
     return node.ptr;
 }
@@ -136,8 +124,7 @@ void* ResourceManager::GetResource(const char* name)
   * @param  ptr: Pointer to the default resource
   * @retval None
   */
-void ResourceManager::SetDefault(void* ptr)
-{
+void ResourceManager::SetDefault(void *ptr) {
     DefaultPtr = ptr;
-    RES_LOG_INFO("Resource: set [0x%p] to default", DefaultPtr);
+            RES_LOG_INFO("Resource: set [0x%p] to default", DefaultPtr);
 }

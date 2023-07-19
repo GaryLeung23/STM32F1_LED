@@ -31,7 +31,7 @@ static GPIO_TypeDef* Tone_GPIO = NULL;
 static uint32_t Tone_ToggleCounter = 0;
 
 /**
-  * @brief  tone中断入口，被定时中断调用
+  * @brief  tone中断入口，被定时中断调用,定时器是TONE_TIMER，参数是根据Tone而动态设定的
   * @param  无
   * @retval 无
   */

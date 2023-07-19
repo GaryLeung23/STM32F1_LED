@@ -75,6 +75,10 @@ void Error_Handler(void);
 #define TOUCH_PEN_GPIO_Port GPIOF
 #define KEY3_WAKEUP_Pin GPIO_PIN_0
 #define KEY3_WAKEUP_GPIO_Port GPIOA
+#define BAT_ADC_Pin GPIO_PIN_1
+#define BAT_ADC_GPIO_Port GPIOA
+#define BAT_CHG_DET_Pin GPIO_PIN_4
+#define BAT_CHG_DET_GPIO_Port GPIOA
 #define BackLight_Pin GPIO_PIN_0
 #define BackLight_GPIO_Port GPIOB
 #define TOUCH_CLK_Pin GPIO_PIN_1

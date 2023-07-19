@@ -166,7 +166,7 @@ bool PageManager::Pop()
 /**
   * @brief  Page switching
   * @param  newNode: Pointer to new page
-  * @param  isEnterAct: Whether it is a ENTER action
+  * @param  isEnterAct: Whether it is a ENTER action   页面切换分为enter exit两个情况,replace、push为enter，pop为exit
   * @param  stash: Parameters passed to the new page
   * @retval Return true if successful
   */
@@ -185,15 +185,16 @@ bool PageManager::SwitchTo(PageBase* newNode, bool isEnterAct, const PageBase::S
         return false;
     }
 
-    _AnimState.IsSwitchReq = true;
+    _AnimState.IsSwitchReq = true;//set page switch request flag
 
     /* Is there a parameter to pass */
     if (stash != nullptr)
     {
+        //将stash传递给new page
         PM_LOG_INFO("stash is detect, %s >> stash(0x%p) >> %s", GetPagePrevName(), stash, newNode->_Name);
 
         void* buffer = nullptr;
-
+        //若newpage还没有stash，则为buffer分配内存
         if (newNode->priv.Stash.ptr == nullptr)
         {
             buffer = lv_malloc(stash->size);
@@ -206,12 +207,14 @@ bool PageManager::SwitchTo(PageBase* newNode, bool isEnterAct, const PageBase::S
                 PM_LOG_INFO("stash(0x%p) malloc[%d]", buffer, stash->size);
             }
         }
+        //若newpage的stash大小一致,则直接使用newpage的stash，否则不进行传递
         else if(newNode->priv.Stash.size == stash->size)
         {
             buffer = newNode->priv.Stash.ptr;
             PM_LOG_INFO("stash(0x%p) is exist", buffer);
         }
 
+        //若buffer不为空，则将stash拷贝到buffer中，并将buffer赋值给newpage的stash
         if (buffer != nullptr)
         {
             memcpy(buffer, stash->ptr, stash->size);
@@ -224,6 +227,7 @@ bool PageManager::SwitchTo(PageBase* newNode, bool isEnterAct, const PageBase::S
     /* Record current page */
     _PageCurrent = newNode;
 
+    //设置_PageCurrent的初始页面状态
     /* If the current page has a cache */
     if (_PageCurrent->priv.IsCached)
     {
@@ -234,9 +238,10 @@ bool PageManager::SwitchTo(PageBase* newNode, bool isEnterAct, const PageBase::S
     else
     {
         /* Load page */
-        _PageCurrent->priv.State = PageBase::PAGE_STATE_LOAD;
+        _PageCurrent->priv.State = PageBase::PAGE_STATE_LOAD;//
     }
 
+    //更新_PagePrev与_PageCurrent的IsEnter的状态机
     if (_PagePrev != nullptr)
     {
         _PagePrev->priv.Anim.IsEnter = false;//not entering party 
@@ -246,6 +251,7 @@ bool PageManager::SwitchTo(PageBase* newNode, bool isEnterAct, const PageBase::S
 
     _AnimState.IsEntering = isEnterAct;//IsEntering setting
 
+    //对于enter状态，用_PageCurrent更新系统的anim配置。对于exit状态，在onSwitchAnimFinish中设置
     if (_AnimState.IsEntering)
     {
         /* Update the animation configuration according to the current page */
@@ -253,10 +259,10 @@ bool PageManager::SwitchTo(PageBase* newNode, bool isEnterAct, const PageBase::S
     }
 
     /* Update the state machine of the previous page */
-    StateUpdate(_PagePrev);
+    StateUpdate(_PagePrev);//PAGE_STATE_ACTIVITY -> PAGE_STATE_WILL_DISAPPEAR
 
     /* Update the state machine of the current page */
-    StateUpdate(_PageCurrent);
+    StateUpdate(_PageCurrent);//如果IsCached为true是PAGE_STATE_LOAD->PAGE_STATE_WILL_APPEAR,否则PAGE_STATE_WILL_APPEAR -> PAGE_STATE_DID_APPEAR
 
     /* Move the layer, move the new page to the front */
     if (_AnimState.IsEntering)
@@ -343,7 +349,7 @@ bool PageManager::SwitchAnimStateCheck()
             _AnimState.IsSwitchReq,
             _AnimState.IsBusy
         );
-        return false;//说明当前有一个页面转换被请求或正在执行，此时不能进行新的页面转换，所以函数要返回false
+        return false;//说明当前系统有一个页面转换被请求或正在执行，此时不能进行新的页面转换，所以函数要返回false
     }
 
     return true;
@@ -357,13 +363,14 @@ bool PageManager::SwitchAnimStateCheck()
 bool PageManager::SwitchReqCheck()
 {
     bool ret = false;
+    
     bool lastNodeBusy = _PagePrev && _PagePrev->priv.Anim.IsBusy;
-
+    //_PagePrev与_PageCurrent不busy,说明_PagePrev与_PageCurrent页面转换已经完成
     if (!_PageCurrent->priv.Anim.IsBusy && !lastNodeBusy)
     {
         PM_LOG_INFO("----Page switch was all finished----");
-        _AnimState.IsSwitchReq = false;
-        ret = true;
+        _AnimState.IsSwitchReq = false;//clear page switch request flag
+        ret = true;//
         _PagePrev = _PageCurrent;
     }
     else
@@ -393,10 +400,11 @@ void PageManager::onSwitchAnimFinish(lv_anim_t* a)
 
     PM_LOG_INFO("Page(%s) Anim finish", base->_Name);
 
-    manager->StateUpdate(base);
-    base->priv.Anim.IsBusy = false;	//not busy
-    bool isFinished = manager->SwitchReqCheck();
+    manager->StateUpdate(base);//更新页面状态机PAGE_STATE_DID_APPEAR -> PAGE_STATE_ACTIVITY 或者 PAGE_STATE_DID_DISAPPEAR -> PAGE_STATE_UNLOAD
+    base->priv.Anim.IsBusy = false;	//clear priv.Anim.IsBusy flag
+    bool isFinished = manager->SwitchReqCheck();//Page switch was all finished
 
+    //对于exit状态，用_PageCurrent更新系统的anim配置
     if (!manager->_AnimState.IsEntering && isFinished)
     {
         manager->SwitchAnimTypeUpdate(manager->_PageCurrent);
@@ -420,7 +428,7 @@ void PageManager::SwitchAnimCreate(PageBase* base)
     AnimDefaultInit(&a);
     lv_anim_set_user_data(&a, base);
     lv_anim_set_var(&a, base->_root);
-    lv_anim_set_ready_cb(&a, onSwitchAnimFinish);// callback
+    lv_anim_set_ready_cb(&a, onSwitchAnimFinish);//设置动画结束回调函数，onSwitchAnimFinish会更新page状态机
     lv_anim_set_exec_cb(&a, animAttr.setter);
 
     int32_t start = 0;
@@ -470,7 +478,7 @@ void PageManager::SwitchAnimCreate(PageBase* base)
     }
 
     lv_anim_start(&a);
-    base->priv.Anim.IsBusy = true;	//busy
+    base->priv.Anim.IsBusy = true;	//set priv.Anim.IsBusy flag
 }
 
 /**

@@ -47,7 +47,7 @@ void PageBase::SetCustomLoadAnimType(
     priv.Anim.Attr.Path = path;
 }
 
-
+//从当前page中pop stash数据 并释放stash内存
 bool PageBase::StashPop(void* ptr, uint32_t size)
 {
     if (priv.Stash.ptr == nullptr)
@@ -70,6 +70,6 @@ bool PageBase::StashPop(void* ptr, uint32_t size)
     memcpy(ptr, priv.Stash.ptr, priv.Stash.size);
     lv_free(priv.Stash.ptr);
     priv.Stash.ptr = nullptr;
-    return false;
+    return true;
 }
 

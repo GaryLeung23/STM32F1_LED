@@ -3,12 +3,13 @@
 
 #include "../../lvgl/lvgl.h"
 
-namespace ResourcePool
-{
+namespace ResourcePool {
 
-void Init();
-lv_font_t* GetFont(const char* name);
-const void* GetImage(const char* name);
+    void Init();
+
+    lv_font_t *GetFont(const char *name);
+
+    const void *GetImage(const char *name);
 
 }
 
